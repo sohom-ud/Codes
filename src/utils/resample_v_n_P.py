@@ -10,7 +10,7 @@ def resample_v_n_P(data):
 
     tnew = data['v_spincorr_elc_1']['Epoch'][...]
 
-    for var in ['v_spincorr_ion', 'N_ion', 'Ptensor_ion', 'Temptensor_ion']:
+    for var in ['v_spincorr_ion', 'N_ion', 'Ptensor_ion', 'Temptensor_ion', 'v_err_ion', 'N_err_ion']:
         
         for probe in [1, 2, 3, 4]:
 

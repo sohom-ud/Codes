@@ -8,6 +8,7 @@ def load_fpi_moms(trange, species="elc", probe="1", drate="brst", wipe=True):
     
     var_names = {
         "numberdensity": "N",
+        "numberdensity_err": "N_err",
         "bulkv_gse": "v",
         "bulkv_err": "v_err",
         "bulkv_spintone_gse": "v_spin",
