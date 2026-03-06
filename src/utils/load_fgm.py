@@ -27,6 +27,7 @@ def load_fgm(trange, probe="1", drate="brst", wipe=True):
         probe=probe, 
         data_rate=drate,
         varnames=list(varlist.keys()),
+        get_support_data=True,
         notplot=True
     )
 

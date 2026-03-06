@@ -20,12 +20,13 @@ def load_edp(trange, probe="1", drate="brst", wipe=True):
     
     varlist = {f'{prefix}_{var}_{suffix}': f"{var}_{probe}" for var in var_names}
 
-    # Load FGM data
+    # Load EDP data
     data = edp(
         trange=trange, 
         probe=probe, 
         data_rate=drate,
         varnames=list(varlist.keys()),
+        get_support_data=True,
         notplot=True
     )
 

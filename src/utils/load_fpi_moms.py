@@ -4,7 +4,7 @@ Loads plasma velocity moments from FPI.
 
 from pyspedas.projects.mms import fpi
 
-def load_fpi_moms(trange, species="elc", probe="1", drate="brst", qmoms=True, wipe=True):
+def load_fpi_moms(trange, species="elc", probe="1", drate="brst", wipe=True):
     
     var_names = {
         "numberdensity": "N",
@@ -15,10 +15,6 @@ def load_fpi_moms(trange, species="elc", probe="1", drate="brst", qmoms=True, wi
         "prestensor_err": "Ptensor_err" ,
         "temptensor_gse": "Temptensor"
     }
-
-    # scalar_vars = ['numberdensity']
-    # vector_vars = ['bulkv_gse', 'bulkv_spintone_gse']
-    # tensor_vars = ['prestensor_gse']
 
     data_dict = dict()
 
@@ -42,6 +38,7 @@ def load_fpi_moms(trange, species="elc", probe="1", drate="brst", qmoms=True, wi
             datatype=f"{dtype}-moms",
             center_measurement=True,
             varnames=list(varlist.keys()), 
+            get_support_data=True,
             notplot=True
         )
     except:
