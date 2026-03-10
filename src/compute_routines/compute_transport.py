@@ -7,6 +7,8 @@ from src.utils.methods import dot
 m = {'ion': 1.67e-27, 'elc': 9.1e-31}
 q = {'ion': 1.6e-19, 'elc': -9.1e-31}
 
+PROBES = [1, 2, 3, 4]
+
 def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True):
 
     use_reselectron = (species == 'ion') and reselectron
@@ -41,37 +43,25 @@ def compute_kinetic_energy_flux(fname, species='ion', probe=1, reselectron=True)
 
 def compute_kinetic_energy_transport(fname, species='ion', reselectron=True):
 
-    # Generate variable list
-    varlist = []
-    for probe in [1, 2, 3, 4]:
-        if reselectron:
-            varlist.extend([f'k_{probe}_res_ve'])
-        else:
-            varlist.extend([f'k_{probe}_res_v{species[0]}'])
+    F_K_dict = dict()
+    k_dict = dict()
 
-    df_dict = hdf_to_df(fname, vars=varlist)
+    for probe in PROBES:
+            
+        use_reselectron = (species == 'ion') and reselectron
+        k_suffix = f'_{probe}_res_v' + ('e' if use_reselectron else f'{species[0]}')
+        k_var = f'k{k_suffix}'
 
-    k = dict()
-    F_K = dict()
+        df_dict= hdf_to_df(fname, vars=[k_var])
 
-    for probe in [1, 2, 3, 4]:
-
-        if species=='ion':
-            if reselectron:
-                k[probe] = df_dict[f'k_{probe}_res_ve']
-                F_K[probe] = compute_kinetic_energy_flux(fname, species, probe, True)
-            else:
-                k[probe] = df_dict[f'k_{probe}_res_vi']
-                F_K[probe] = compute_kinetic_energy_flux(fname, species, probe, False)
-        elif species=='elc':
-                k[probe] = df_dict[f'k_{probe}_res_ve']
-                F_K[probe] = compute_kinetic_energy_flux(fname, species, probe, reselectron)
+        F_K_dict[probe] = compute_kinetic_energy_transport(fname, species, reselectron)
+        k_dict[probe] = df_dict[k_var]
 
     J_K = 0.0
 
     for probe in [1, 2, 3, 4]:
 
-        J_K += dot(k[probe], F_K[probe]).squeeze()
+        J_K += dot(k_dict[probe], F_K_dict[probe]).squeeze()
 
     return J_K
 
@@ -81,18 +71,14 @@ def compute_kinetic_energy_transport(fname, species='ion', reselectron=True):
 
 def compute_thermal_energy(fname, species='ion', probe=1, reselectron=True):
 
-    # Generate variable list
-    if species=='ion':
-        if reselectron:
-            varlist = [f'Ptensor_{species}_{probe}_reselectron']
-        else:
-            varlist = [f'Ptensor_{species}_{probe}']
-    elif species=='elc':
-        varlist = [f'Ptensor_{species}_{probe}']
+    use_reselectron = (species == 'ion') and reselectron
+    suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
 
-    df_dict = hdf_to_df(fname, vars=varlist)
+    P_var = 'Ptensor{suffix}'
 
-    P = df_dict[varlist[0]]
+    df_dict = hdf_to_df(fname, vars=[P_var])
+
+    P = df_dict[P_var]
 
     E_th = 0.5 * (P['xx'] + P['yy'] + P['zz']) * 1e-9 # Pressure tensor is measured in nPa
 
@@ -100,18 +86,13 @@ def compute_thermal_energy(fname, species='ion', probe=1, reselectron=True):
 
 def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True):
 
-    # Generate variable list
-    if species=='ion':
-        if reselectron:
-            varlist = [f'v_spincorr_{species}_{probe}_reselectron']
-        else:
-            varlist = [f'v_spincorr_{species}_{probe}']
-    elif species=='elc':
-        varlist = [f'v_spincorr_{species}_{probe}']
+    use_reselectron = (species == 'ion') and reselectron
+    suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
+    v_var = f'v_spincorr{suffix}'
 
-    df_dict = hdf_to_df(fname, vars=varlist)
+    df_dict = hdf_to_df(fname, vars=[v_var])
 
-    v = df_dict[varlist[0]]
+    v = df_dict[v_var]
 
     E_th = compute_thermal_energy(fname, species, probe, reselectron)
 
@@ -121,37 +102,25 @@ def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True)
 
 def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=True):
 
-    # Generate variable list
-    varlist = []
-    for probe in [1, 2, 3, 4]:
-        if reselectron:
-            varlist.extend([f'k_{probe}_res_ve'])
-        else:
-            varlist.extend([f'k_{probe}_res_v{species[0]}'])
+    F_th_dict = dict()
+    k_dict = dict()
 
-    df_dict = hdf_to_df(fname, vars=varlist)
+    for probe in PROBES:
+            
+        use_reselectron = (species == 'ion') and reselectron
+        k_suffix = f'_{probe}_res_v' + ('e' if use_reselectron else f'{species[0]}')
+        k_var = f'k{k_suffix}'
 
-    k = dict()
-    F_th = dict()
+        df_dict= hdf_to_df(fname, vars=[k_var])
 
-    for probe in [1, 2, 3, 4]:
-
-        if species=='ion':
-            if reselectron:
-                k[probe] = df_dict[f'k_{probe}_res_ve']
-                F_th[probe] = compute_thermal_energy_flux(fname, species, probe, True)
-            else:
-                k[probe] = df_dict[f'k_{probe}_res_vi']
-                F_th[probe] = compute_thermal_energy_flux(fname, species, probe, False)
-        elif species=='elc':
-                k[probe] = df_dict[f'k_{probe}_res_ve']
-                F_th[probe] = compute_thermal_energy_flux(fname, species, probe, reselectron)
+        F_th_dict[probe] = compute_thermal_energy_flux(fname, species, reselectron)
+        k_dict[probe] = df_dict[k_var]
 
     J_th = 0.0
 
     for probe in [1, 2, 3, 4]:
 
-        J_th += dot(k[probe], F_th[probe]).squeeze()
+        J_th += dot(k_dict[probe], F_th_dict[probe]).squeeze()
 
     return J_th
 
@@ -182,3 +151,49 @@ def compute_pressure_work(fname, species='ion', probe=1, reselectron=True):
 
 def compute_pressure_work_transport(fname, species='ion', probe=1, reselectron=True):
 
+    F_P_dict = dict()
+    k_dict = dict()
+
+    for probe in PROBES:
+            
+        use_reselectron = (species == 'ion') and reselectron
+        k_suffix = f'_{probe}_res_v' + ('e' if use_reselectron else f'{species[0]}')
+        k_var = f'k{k_suffix}'
+
+        df_dict= hdf_to_df(fname, vars=[k_var])
+
+        F_P_dict[probe] = compute_pressure_work(fname, species, reselectron)
+        k_dict[probe] = df_dict[k_var]
+
+    J_P = pd.Series(0.0, index=k_dict[1].index)
+
+    for probe in PROBES:
+
+        J_P += dot(k_dict[probe], F_P_dict[probe]).squeeze()
+
+    return J_P
+
+def compute_div_q(fname, species='ion', reselectron=True):
+
+    k_dict = dict()
+    heatflux_dict = dict()
+
+    for probe in PROBES:
+
+        use_reselectron = (species == 'ion') and reselectron
+        suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
+        k_suffix = f'_{probe}_res_v' + ('e' if use_reselectron else f'{species[0]}')
+        k_var = f'k{k_suffix}'
+        heatflux_var = f'heatflux{suffix}'
+
+        df_dict= hdf_to_df(fname, vars=[k_var, heatflux_var])
+
+        heatflux_dict[probe] = df_dict[heatflux_var]
+        k_dict[probe] = df_dict[k_var]
+
+    divq = pd.Series(0.0, index=k_dict[1].index)
+
+    for probe in PROBES:
+        divq += dot(k_dict[probe], heatflux_dict[probe])
+
+    return divq
