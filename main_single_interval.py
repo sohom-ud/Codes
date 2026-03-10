@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     # interval_list = pd.read_csv(r'/home/sohom/MMS_PySPEDAS/interval_list.txt', delim_whitespace=True, header=None, names=['start_time', 'end_time', 'duration'])    
 
-    data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    data_dir = r'/home/sohom/Documents/MMS_events/Tail_Reconnection'
 
     data = dict()
     

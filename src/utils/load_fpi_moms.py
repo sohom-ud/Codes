@@ -14,7 +14,8 @@ def load_fpi_moms(trange, species="elc", probe="1", drate="brst", wipe=True):
         "bulkv_spintone_gse": "v_spin",
         "prestensor_gse": "Ptensor",
         "prestensor_err": "Ptensor_err" ,
-        "temptensor_gse": "Temptensor"
+        "temptensor_gse": "Temptensor",
+        "temptensor_err": "Temptensor_err"
     }
 
     data_dict = dict()
