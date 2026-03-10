@@ -180,3 +180,5 @@ def compute_pressure_work(fname, species='ion', probe=1, reselectron=True):
 
     return F_P
 
+def compute_pressure_work_transport(fname, species='ion', probe=1, reselectron=True):
+

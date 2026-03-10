@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # trange = ['2016-02-23/20:02:35', '2016-02-23/20:04:44']
     # trange = ['2016-02-23/20:02:04', '2016-02-23/20:05:40']
 
-    trange = ['2017-07-11/22:30:00', '2017-07-11/22:40:00'] # Torbert 2018 event
+    # trange = ['2017-07-11/22:30:00', '2017-07-11/22:40:00'] # Torbert 2018 event
 
     # trange = ['2015-12-09/05:03:00', '2015-12-09/05:04:00'] # Wilder 2018 event 2
 
@@ -63,11 +63,12 @@ if __name__ == "__main__":
 
     # trange = ['2017-01-27/08:06:20', '2017-01-27/08:06:55']
 
-    # trange = ['2018-04-15/04:32:41', '2018-04-15/04:32:46'] # Burch et. al. 2020 event
+    trange = ['2018-04-15/04:32:41', '2018-04-15/04:32:46'] # Burch et. al. 2020 event
 
     # interval_list = pd.read_csv(r'/home/sohom/MMS_PySPEDAS/interval_list.txt', delim_whitespace=True, header=None, names=['start_time', 'end_time', 'duration'])    
 
-    data_dir = r'/home/sohom/Documents/MMS_events/Tail_Reconnection'
+    # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    data_dir = r'/home/sroy/Documents/MMS_events/MP_Reconnection'
 
     data = dict()
     
