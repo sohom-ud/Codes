@@ -18,8 +18,8 @@ def compute_gradv_err(fname, species='ion', reselectron=True):
 
         df_dict= hdf_to_df(fname, vars=[v_err_var, k_var])
 
-        v_err_dict[probe] = df_dict[v_err_var]
-        k_dict[probe] = df_dict[k_var]
+        v_err_dict[probe] = df_dict[v_err_var] # Velocity errors in km/s
+        k_dict[probe] = df_dict[k_var] # Reciprocal vectors in 1/km
 
     gradv_err = pd.DataFrame(0, columns=['xx', 'xy', 'xz', 'yx', 'yy', 'yz', 'zx', 'zy', 'zz'], index=k_dict[1].index)
 
@@ -47,8 +47,8 @@ def compute_theta_err(fname, species='ion', probe=1, reselectron=True):
 
         df_dict= hdf_to_df(fname, vars=[v_err_var, k_var])
 
-        v_err_dict[probe] = df_dict[v_err_var]
-        k_dict[probe] = df_dict[k_var]
+        v_err_dict[probe] = df_dict[v_err_var] # Velocity errors in km/s
+        k_dict[probe] = df_dict[k_var] # Reciprocal vectors in 1/km
 
     theta_err = pd.Series(0, index=k_dict[1].index)
 
@@ -71,7 +71,7 @@ def compute_P_av_err(fname, species='ion', reselectron=True):
 
         df_dict = hdf_to_df(fname, vars=[P_err_var])
 
-        P_err_dict[probe] = df_dict[P_err_var]
+        P_err_dict[probe] = df_dict[P_err_var] # Pressure tensor error in nPa
 
     P_av_err = pd.DataFrame(0.0, columns=['xx', 'xy', 'xz', 'yx', 'yy', 'yz', 'zx', 'zy', 'zz'], index=P_err_dict[1].index)
 

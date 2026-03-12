@@ -2,10 +2,13 @@ import pandas as pd
 import numpy as np
 from src.utils.hdf_to_df import hdf_to_df
 from src.utils.resample import resample
-from src.utils.methods import dot
+from src.utils.methods import dot, cross
+from src.compute_routines.compute_PiD_functions import compute_jcurl
 
 m = {'ion': 1.67e-27, 'elc': 9.1e-31}
 q = {'ion': 1.6e-19, 'elc': -9.1e-31}
+
+mu_0 = 4*np.pi*1e-7
 
 PROBES = [1, 2, 3, 4]
 
@@ -54,7 +57,7 @@ def compute_kinetic_energy_transport(fname, species='ion', reselectron=True):
 
         df_dict= hdf_to_df(fname, vars=[k_var])
 
-        F_K_dict[probe] = compute_kinetic_energy_transport(fname, species, reselectron)
+        F_K_dict[probe] = compute_kinetic_energy_flux(fname, species, reselectron)
         k_dict[probe] = df_dict[k_var]
 
     J_K = 0.0
@@ -197,3 +200,25 @@ def compute_div_q(fname, species='ion', reselectron=True):
         divq += dot(k_dict[probe], heatflux_dict[probe])
 
     return divq
+
+def compute_Poynting_flux(fname, probe=1, reselectron=True):
+
+    E_var = f'edp_dce_gse_{probe}'
+    B_var = f'b_gse_{probe}'
+
+    df_dict = hdf_to_df(fname, vars=[E_var, B_var])
+
+    E = df_dict[E_var]
+    B = df_dict[B_var]
+    B = B.drop('mag', axis=1)
+
+    #Convert E and B to SI
+
+    E = E * 1e-3
+    B = B * 1e-9
+
+    E = resample(E, B)
+
+    S = (1/mu_0) * cross(E, B) # W.m^-2
+
+    return S
