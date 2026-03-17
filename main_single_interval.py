@@ -59,16 +59,18 @@ if __name__ == "__main__":
     # trange = ['2017-07-11/22:33:30', '2017-07-11/22:34:30'] #Torbert 2018 magnetotail reconnection event
     # trange = ['2020-06-26/00:08:48', '2020-06-26/01:30:30'] #KHI event
 
-    trange = ['2017-06-17/20:24:03', '2017-06-17/20:24:11'] # Roberts(2023) magnetotail event
+    # trange = ['2017-06-17/20:24:03', '2017-06-17/20:24:11'] # Roberts(2023) magnetotail event
 
     # trange = ['2017-01-27/08:06:20', '2017-01-27/08:06:55']
 
     # trange = ['2018-04-15/04:32:41', '2018-04-15/04:32:46'] # Burch et. al. 2020 event
 
+    trange = ['2016-02-14/20:41:50', '2016-02-14/20:42:10'] # Lenouvel (2021) event
+
     # interval_list = pd.read_csv(r'/home/sohom/MMS_PySPEDAS/interval_list.txt', delim_whitespace=True, header=None, names=['start_time', 'end_time', 'duration'])    
 
-    data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
-    # data_dir = r'/home/sroy/Documents/MMS_events/MP_Reconnection'
+    # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    data_dir = r'/home/sroy/Documents/MMS_events/MP_Reconnection'
 
     data = dict()
     
