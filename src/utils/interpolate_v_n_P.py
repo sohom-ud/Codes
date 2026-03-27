@@ -26,19 +26,17 @@ def interpolate_v_n_P(data, species='ion'):
 
     # Find minimum start time and maximum end time
     for probe in probe_list:
-        
         max_start_time = max(max_start_time, data[f'v_{species}_{probe}']['Epoch'][0])
         min_end_time = min(min_end_time, data[f'v_{species}_{probe}']['Epoch'][-1])
 
-    for var in ['v', 'v_spin', 'v_spincorr', 'N', 'Ptensor', 'Temptensor', 'v_err', 'N_err', 'Ptensor_err', 'Temptensor_err']:
+    for var in ['v', 'v_spin', 'v_spincorr', 'N', 'Ptensor', 'Temptensor', 'v_err', 'N_err', 'Ptensor_err', 'Temptensor_err', 'heatflux', 'heatflux_err']:
 
         for probe in probe_list:
-
+            print(var)
             t = data[f'{var}_{species}_{probe}']['Epoch']
             v = data[f'{var}_{species}_{probe}']['Values']
             
             if var in ['Ptensor', 'Temptensor', 'Ptensor_err', 'Temptensor_err']:
-
                 v = data[f'{var}_{species}_{probe}']['Values'].reshape(len(t), 9)
 
             df = pd.DataFrame(data=np.column_stack([t, v]))
@@ -56,7 +54,6 @@ def interpolate_v_n_P(data, species='ion'):
 
             data[f'{var}_{species}_{probe}']['Epoch'] = tnew
             data[f'{var}_{species}_{probe}']['Values'] = f(tnew)
-
 
 def interpolate_v_n_P_after_201806(data, species='ion'):
    

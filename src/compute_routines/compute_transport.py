@@ -206,7 +206,7 @@ def compute_div_q(fname, species='ion', reselectron=True):
     divq = pd.Series(0.0, index=k_dict[1].index)
 
     for probe in PROBES:
-        divq += dot(k_dict[probe], heatflux_dict[probe]) # Units: W.m^-3
+        divq += dot(k_dict[probe], heatflux_dict[probe]).squeeze() # Units: W.m^-3
 
     return divq
 

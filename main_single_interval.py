@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # trange = ['2017-01-01/14:17:00', '2017-01-01/14:17:30'] #Prayash new interval (e-only within ion jets)
     # trange = ['2015-10-16/13:06:00', '2015-10-16/13:08:00'] # Burch 2016 event
     # trange = ['2015-09-08/11:01:17', '2015-09-08/11:01:23'] # Eriksson 2016 event
-    # trange = ['2015-12-08/11:20:40', '2015-12-08/11:20:50'] # Burch and Phan 2016 event
+    # trange = ['2015-12-08/11:20:42', '2015-12-08/11:20:45'] # Burch and Phan 2016 event
     
     # trange = ['2018-04-15/04:32:15', '2018-04-15/04:33:45'] # Burch et. al. 2020 event
     # trange = ['2015-09-08/11:00:04', '2015-09-08/11:02:00'] # Eriksson et. al. 2016
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # trange = ['2017-07-11/22:33:30', '2017-07-11/22:34:30'] #Torbert 2018 magnetotail reconnection event
     # trange = ['2020-06-26/00:08:48', '2020-06-26/01:30:30'] #KHI event
 
-    trange = ['2017-06-17/20:24:03', '2017-06-17/20:24:11'] # Roberts(2023) magnetotail event
+    # trange = ['2017-06-17/20:24:03', '2017-06-17/20:24:11'] # Lu(2020) magnetotail event
 
     # trange = ['2017-01-27/08:06:20', '2017-01-27/08:06:55']
 
@@ -67,9 +67,12 @@ if __name__ == "__main__":
 
     # trange = ['2016-02-14/20:41:50', '2016-02-14/20:42:10'] # Lenouvel (2021) event
 
+    trange = ['2015-11-30/00:23:40', '2015-11-30/00:24:15'] # Voros(2017) magnetosheath reconnection event
+
     # interval_list = pd.read_csv(r'/home/sohom/MMS_PySPEDAS/interval_list.txt', delim_whitespace=True, header=None, names=['start_time', 'end_time', 'duration'])    
 
-    data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
+    # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
     # data_dir = r'/home/sroy/Documents/MMS_events/MP_Reconnection'
 
     data = dict()
