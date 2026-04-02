@@ -27,6 +27,10 @@ def hdf_to_df(fname, vars="all"):
         # x = [date.decode('utf-8') for date in x]
         
         y = data[key]['Values'][...]
+
+        if len(y.shape)==1:
+            y = y.reshape(len(y), 1)
+
         colnum = y.shape[1]
 
         if colnum == 1:

@@ -67,12 +67,16 @@ if __name__ == "__main__":
 
     # trange = ['2016-02-14/20:41:50', '2016-02-14/20:42:10'] # Lenouvel (2021) event
 
-    trange = ['2015-11-30/00:23:40', '2015-11-30/00:24:15'] # Voros(2017) magnetosheath reconnection event
+    # trange = ['2015-11-30/00:23:40', '2015-11-30/00:24:15'] # Voros(2017) magnetosheath reconnection event
+
+    # trange = ['2017-08-10/12:18:00', '2017-08-10/12:19:00'] #Hubbert(2022) magnetotail event
 
     # interval_list = pd.read_csv(r'/home/sohom/MMS_PySPEDAS/interval_list.txt', delim_whitespace=True, header=None, names=['start_time', 'end_time', 'duration'])    
 
-    data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
-    # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    trange = ['2017-06-19/04:59:00', '2017-06-19/05:00:00']
+
+    # data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
+    data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
     # data_dir = r'/home/sroy/Documents/MMS_events/MP_Reconnection'
 
     data = dict()

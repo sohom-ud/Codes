@@ -21,15 +21,15 @@ def mult(a, b): #Create dyadic product of two vector time series
 
     coords = 'xyz'
 
-    a_cols = a.columns  # assumed to be ordered like x, y, z
-    b_cols = b.columns  # assumed to be ordered like x, y, z
+    # a_cols = a.columns  # assumed to be ordered like x, y, z
+    # b_cols = b.columns  # assumed to be ordered like x, y, z
 
     ab = pd.DataFrame(columns=['xx', 'xy', 'xz', 'yx', 'yy', 'yz', 'zx', 'zy', 'zz'])
 
     for comp1 in ['x', 'y', 'z']:
         for comp2 in ['x', 'y', 'z']:
 
-            ab[f'{comp1}{comp2}'] = a[a_cols[coords.find(comp1)]] * b[b_cols[coords.find(comp2)]]
+            ab[f'{comp1}{comp2}'] = a[comp1] * b[comp2]
 
     return ab
 
