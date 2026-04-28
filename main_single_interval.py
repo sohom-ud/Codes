@@ -73,10 +73,12 @@ if __name__ == "__main__":
 
     # interval_list = pd.read_csv(r'/home/sohom/MMS_PySPEDAS/interval_list.txt', delim_whitespace=True, header=None, names=['start_time', 'end_time', 'duration'])    
 
-    trange = ['2017-06-19/04:59:00', '2017-06-19/05:00:00']
+    trange = ['2015-11-04/04:35:05', '2015-11-04/04:35:10'] # Wilder event (2018)
 
-    # data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
-    data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    # trange = ['2017-06-19/04:59:00', '2017-06-19/05:00:00']
+
+    data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
+    # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
     # data_dir = r'/home/sroy/Documents/MMS_events/MP_Reconnection'
 
     data = dict()

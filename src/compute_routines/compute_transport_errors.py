@@ -5,14 +5,14 @@ import pandas as pd
 import numpy as np
 
 m = {'ion': 1.67e-27, 'elc': 9.1e-31}
-q = {'ion': 1.6e-19, 'elc': -1.6e-19}
+q = {'ion': 1.6e-19, 'elc': -9.1e-31}
 
 mu_0 = 4*np.pi*1e-7
 
 comps = ['x', 'y', 'z']
 PROBES = [1, 2, 3, 4]
 
-def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True):
+def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -24,12 +24,16 @@ def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True):
     df_dict = hdf_to_df(fname, vars=[n_var, v_var, n_err_var, v_err_var])
 
     n = df_dict[n_var].squeeze() * 1e6 # Density in m^-3
-    v = df_dict[v_var] * 1e3 # Velocity in m.s^-1
+    v = (df_dict[v_var]-v_xl) * 1e3 # Velocity in m.s^-1
     n_err = df_dict[n_err_var].squeeze() * 1e6 # Density errors in m^-3
     v_err = df_dict[v_err_var] * 1e3 # Velocity errors in m.s^-1
 
+    #Subtracting x-line velocity
+    v['x'] = v['x'] - v_xl[0]
+    v['y'] = v['y'] - v_xl[1]
+    v['z'] = v['z'] - v_xl[2]
+
     n = resample(n, v)
-    n_err = resample(n_err, v)
 
     v2 = (v**2).sum(axis=1) # v^2 in m^2.s^-2
 
@@ -41,9 +45,9 @@ def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True):
     dFK_du = pd.DataFrame(0.0, columns=['xx', 'xy', 'xz', 'yx', 'yy', 'yz', 'zx', 'zy', 'zz'], index=v.index)
 
     for i in comps:
-        dFK_du[f'{i}{i}'] = 0.5 * m[species] * n * v2 # units: kg.m^-1.s^-2
         for j in comps:
-            dFK_du[f'{i}{j}'] += m[species] * n * v[i] * v[j] # units: kg.m^-1.s^-2
+            dFK_du[f'{i}{j}'] = m[species] * n * v[i] * v[j] # units: kg.m^-1.s^-2
+            dFK_du[f'{i}{i}'] += 0.5 * m[species] * n * v2 # units: kg.m^-1.s^-2
 
     err = pd.DataFrame(0.0, columns=comps, index=v.index)
 
@@ -54,7 +58,7 @@ def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True):
 
     return err
 
-def compute_Ef_transport_err(fname, species='ion', reselectron=True):
+def compute_Ef_transport_err(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
 
     k_dict = dict()
     F_K_err_dict = dict()
@@ -69,19 +73,21 @@ def compute_Ef_transport_err(fname, species='ion', reselectron=True):
 
         k_dict[probe] = df_dict[k_var] * 1e-3 # Reciprocal vectors in m^-1
 
-        F_K_err_dict[probe] = compute_Ef_flux_err(fname, species, probe, reselectron) # Flux errors in W.m^-2
+        F_K_err_dict[probe] = compute_Ef_flux_err(fname, species, probe, reselectron, v_xl) # Flux errors in W.m^-2
 
     err = pd.Series(0.0, index=k_dict[1].index)
 
-    for probe in PROBES:
-        err += dot(k_dict[probe]**2 , F_K_err_dict[probe]**2).squeeze()
+    for i in comps:
+        for j in comps:
+            for probe in PROBES:
+                err += dot(k_dict[probe]**2 , F_K_err_dict[probe]**2).squeeze()
+                # Error units: W.m^-3
 
     err = np.sqrt(err)
-    # Error units: W.m^-3
 
     return err
 
-def compute_Eth_flux_err(fname, species='ion', probe=1, reselectron=True):
+def compute_Eth_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -94,6 +100,11 @@ def compute_Eth_flux_err(fname, species='ion', probe=1, reselectron=True):
 
     v = df_dict[v_var] * 1e3# units: m.s^-1
     v_err = df_dict[v_err_var] * 1e3 # units: m.s^-1
+
+    #Subtracting x-line velocity
+    v['x'] = v['x'] - v_xl[0]
+    v['y'] = v['y'] - v_xl[1]
+    v['z'] = v['z'] - v_xl[2]
 
     P = df_dict[P_var] * 1e-9 # Pressure tensor in Pa
     P_err = df_dict[P_err_var] * 1e-9 # Pressure tensor error in Pa
@@ -109,7 +120,7 @@ def compute_Eth_flux_err(fname, species='ion', probe=1, reselectron=True):
 
     return err
 
-def compute_Eth_transport_err(fname, species='ion', reselectron=True):
+def compute_Eth_transport_err(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
 
     k_dict = dict()
     F_T_err_dict = dict()
@@ -124,19 +135,21 @@ def compute_Eth_transport_err(fname, species='ion', reselectron=True):
 
         k_dict[probe] = df_dict[k_var] * 1e-3 #Reciprocal vectors in m^-1
 
-        F_T_err_dict[probe] = compute_Eth_flux_err(fname, species, probe, reselectron) # Flux errors in W.m^-2
+        F_T_err_dict[probe] = compute_Eth_flux_err(fname, species, probe, reselectron, v_xl) # Flux errors in W.m^-2
 
     err = pd.Series(0.0, index=k_dict[1].index)
 
-    for probe in PROBES:
-        err += dot(k_dict[probe]**2 , F_T_err_dict[probe]**2).squeeze()
+    for i in comps:
+        for j in comps:
+            for probe in PROBES:
+                err += dot(k_dict[probe]**2 , F_T_err_dict[probe]**2).squeeze()
+                #Error units: W.m^-3
 
     err = np.sqrt(err)
-    #Error units: W.m^-3
 
     return err
 
-def compute_pressure_work_err(fname, species='ion', probe=1, reselectron=True):
+def compute_pressure_work_err(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -149,6 +162,11 @@ def compute_pressure_work_err(fname, species='ion', probe=1, reselectron=True):
 
     v = df_dict[v_var] * 1e3 # Velocity in m.s^-1
     v_err = df_dict[v_err_var] * 1e3 # Velocity in m.s^-1
+
+    #Subtracting x-line velocity
+    v['x'] = v['x'] - v_xl[0]
+    v['y'] = v['y'] - v_xl[1]
+    v['z'] = v['z'] - v_xl[2]
 
     P = df_dict[P_var] * 1e-9 # Pressure tensor in Pa
     P_err = df_dict[P_err_var] * 1e-9 # Pressure tensor error in Pa
@@ -166,7 +184,7 @@ def compute_pressure_work_err(fname, species='ion', probe=1, reselectron=True):
 
     return err
 
-def compute_pressure_work_transport_err(fname, species='ion', reselectron=True):
+def compute_pressure_work_transport_err(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
 
     k_dict = dict()
     P_W_err_dict = dict()
@@ -181,12 +199,14 @@ def compute_pressure_work_transport_err(fname, species='ion', reselectron=True):
 
         k_dict[probe] = df_dict[k_var] * 1e-3 #Reciprocal vectors in m^-1
 
-        P_W_err_dict[probe] = compute_pressure_work_err(fname, species, probe, reselectron) # Flux errors in W.m^-2
+        P_W_err_dict[probe] = compute_pressure_work_err(fname, species, probe, reselectron, v_xl) # Flux errors in W.m^-2
 
     err = pd.Series(0.0, index=k_dict[1].index)
 
-    for probe in PROBES:
-        err += dot(k_dict[probe]**2 , P_W_err_dict[probe]**2).squeeze()
+    for i in comps:
+        for j in comps:
+            for probe in PROBES:
+                err += dot(k_dict[probe]**2 , P_W_err_dict[probe]**2).squeeze()
 
     err = np.sqrt(err)
 
@@ -251,6 +271,9 @@ def compute_Poynting_flux_err(fname, probe=1, res='i'):
     B = B.drop('mag', axis=1)
 
     #Convert E and B to SI
+
+    E = E * 1e-3
+    B = B * 1e-9
 
     if s!='B':
         v = df_dict[v_var]

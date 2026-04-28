@@ -16,7 +16,7 @@ PROBES = [1, 2, 3, 4]
 #             KINETIC ENERGY             
 #========================================
 
-def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True):
+def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -26,7 +26,12 @@ def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True):
     df_dict = hdf_to_df(fname, vars=[n_var, v_var])
 
     n = df_dict[n_var] * 1e6 # Density in m^-3
-    v = df_dict[v_var] * 1e3 # Velocity in m.s^-1
+    v = df_dict[v_var] * 1e3 # Velocity in m.s^-1 
+
+    #Subtracting x-line velocity
+    v['x'] = v['x'] - v_xl[0]
+    v['y'] = v['y'] - v_xl[1]
+    v['z'] = v['z'] - v_xl[2]
 
     n = resample(n, v)
 
@@ -34,7 +39,7 @@ def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True):
 
     return Ef
 
-def compute_kinetic_energy_flux(fname, species='ion', probe=1, reselectron=True):
+def compute_kinetic_energy_flux(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -44,13 +49,18 @@ def compute_kinetic_energy_flux(fname, species='ion', probe=1, reselectron=True)
 
     v = df_dict[v_var] * 1e3 # Velocity in m.s^-1
 
-    KE = compute_kinetic_energy(fname, species, probe, reselectron) # Kinetic energy in kg.m^-1.s^-2
+    #Subtracting x-line velocity
+    v['x'] = v['x'] - v_xl[0]
+    v['y'] = v['y'] - v_xl[1]
+    v['z'] = v['z'] - v_xl[2]    
+
+    KE = compute_kinetic_energy(fname, species, probe, reselectron, v_xl, L, M, N) # Kinetic energy in kg.m^-1.s^-2
 
     F_K = v.mul(KE, axis=0) # Units: kg.s^-3 or W.m^-2
 
     return F_K
 
-def compute_kinetic_energy_transport(fname, species='ion', reselectron=True):
+def compute_kinetic_energy_transport(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     F_K_dict = dict()
     k_dict = dict()
@@ -63,7 +73,7 @@ def compute_kinetic_energy_transport(fname, species='ion', reselectron=True):
 
         df_dict= hdf_to_df(fname, vars=[k_var])
 
-        F_K_dict[probe] = compute_kinetic_energy_flux(fname, species, probe, reselectron) # Units: W.m^-2
+        F_K_dict[probe] = compute_kinetic_energy_flux(fname, species, probe, reselectron, v_xl) # Units: W.m^-2
         k_dict[probe] = df_dict[k_var] * 1e-3 # Reciprocal vectors in m^-1
 
     J_K = 0.0
@@ -95,7 +105,7 @@ def compute_thermal_energy(fname, species='ion', probe=1, reselectron=True):
 
     return E_th
 
-def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True):
+def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -104,14 +114,19 @@ def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True)
     df_dict = hdf_to_df(fname, vars=[v_var])
 
     v = df_dict[v_var] * 1e3 # Velocity in m.s^-1
-
+    
+    #Subtracting x-line velocity
+    v['x'] = v['x'] - v_xl[0]
+    v['y'] = v['y'] - v_xl[1]
+    v['z'] = v['z'] - v_xl[2]
+    
     E_th = compute_thermal_energy(fname, species, probe, reselectron) # Thermal energy in Pa
 
     F_th = v.mul(E_th, axis=0) # Units: Pa.m.s^-1 = kg.s^-3 or W.m^-2
 
     return F_th
 
-def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=True):
+def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     F_th_dict = dict()
     k_dict = dict()
@@ -124,7 +139,7 @@ def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=
 
         df_dict= hdf_to_df(fname, vars=[k_var])
 
-        F_th_dict[probe] = compute_thermal_energy_flux(fname, species, probe, reselectron)
+        F_th_dict[probe] = compute_thermal_energy_flux(fname, species, probe, reselectron, v_xl, L, M, N)
         k_dict[probe] = df_dict[k_var] * 1e-3 # Reciprocal vectors in m^-1
 
     J_th = 0.0
@@ -139,7 +154,7 @@ def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=
 #=========================================
 #              PRESSURE WORK              
 #=========================================
-def compute_pressure_work(fname, species='ion', probe=1, reselectron=True):
+def compute_pressure_work(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -151,7 +166,12 @@ def compute_pressure_work(fname, species='ion', probe=1, reselectron=True):
 
     P = df_dict[P_var] * 1e-9 # Pressure tensor in Pa
     v = df_dict[v_var] * 1e3 # Velocity in m.s^-1
-
+    
+    #Subtracting x-line velocity
+    v['x'] = v['x'] - v_xl[0]
+    v['y'] = v['y'] - v_xl[1]
+    v['z'] = v['z'] - v_xl[2]
+    
     comps = ['x', 'y', 'z']
     F_P = pd.DataFrame(0.0, columns=['x', 'y', 'z'], index=v.index)
 
@@ -161,7 +181,7 @@ def compute_pressure_work(fname, species='ion', probe=1, reselectron=True):
 
     return F_P
 
-def compute_pressure_work_transport(fname, species='ion', probe=1, reselectron=True):
+def compute_pressure_work_transport(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     F_P_dict = dict()
     k_dict = dict()
@@ -174,7 +194,7 @@ def compute_pressure_work_transport(fname, species='ion', probe=1, reselectron=T
 
         df_dict= hdf_to_df(fname, vars=[k_var])
 
-        F_P_dict[probe] = compute_pressure_work(fname, species, probe, reselectron)
+        F_P_dict[probe] = compute_pressure_work(fname, species, probe, reselectron, v_xl, L, M, N)
         k_dict[probe] = df_dict[k_var] * 1e-3 # Reciprocal vectors in m^-1
 
     J_P = pd.Series(0.0, index=k_dict[1].index)
@@ -206,7 +226,7 @@ def compute_div_q(fname, species='ion', reselectron=True):
     divq = pd.Series(0.0, index=k_dict[1].index)
 
     for probe in PROBES:
-        divq += dot(k_dict[probe], heatflux_dict[probe]).squeeze() # Units: W.m^-3
+        divq += dot(k_dict[probe], heatflux_dict[probe]) # Units: W.m^-3
 
     return divq
 

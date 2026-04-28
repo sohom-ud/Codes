@@ -205,7 +205,7 @@ def compute_jdotE(fname):
 
     for probe in [1, 2, 3, 4]:
 
-        E[probe] = df_dict[f'edp_dce_gse_{probe}']
+        E[probe] = resample(df_dict[f'edp_dce_gse_{probe}'], j)
 
     jdotE = ((j * E[1]).sum(axis=1) + (j * E[2]).sum(axis=1) + (j * E[3]).sum(axis=1) + (j * E[4]).sum(axis=1))/4000.0
 
@@ -220,11 +220,12 @@ def compute_jpart(fname):
     df_dict = hdf_to_df(fname)
     j = pd.DataFrame()
 
-    ni = df_dict['N_ion_1']
-    vi = df_dict['v_spincorr_ion_1']
-    ve = df_dict['v_spincorr_elc_1']
+    ni = df_dict['N_ion_1']*1e6
+    vi = df_dict['v_spincorr_ion_1']*1e3
+    ve = df_dict['v_spincorr_elc_1']*1e3
 
     ve = resample(ve, vi)
+    ni = resample(ni, vi)
 
     j = e * (vi-ve).mul(ni.values, axis=0)
 
