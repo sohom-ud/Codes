@@ -12,7 +12,7 @@ dist = fpi(trange=times, probe=1, data_rate='brst', level='l2', datatype='dis-di
 
 E_bins = dist['mms1_dis_energy_brst']['y'][0] # Energy bin centers
 theta_bins = dist['mms1_dis_theta_brst']['y'] # Theta bin centers (elevation)
-phi_bins = dist['mms1_dis_phi_brst']['y'][0] # Phi bin centers (azimuth)theta_bins = dist['mms1_dis_theta_brst']['y'] # Theta bin centers (elevation)
+phi_bins = dist['mms1_dis_phi_brst']['y'][0] # Phi bin centers (azimuth)
 
 f = dist['mms1_dis_dist_brst']['y'][0]
 
