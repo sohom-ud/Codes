@@ -6,8 +6,8 @@ from src.compute_routines.compute_PiD_errors import *
 from datetime import datetime
 
 # fname = r'/home/sroy/Documents/MMS_events/MP_Reconnection/20180415_043241_20180415_043246.h5'
-fname = r'/home/sroy/Documents/MMS_events/Tail_Reconnection/20170617_202403_20170617_202411.h5'
-# fname = r'/home/sroy/Documents/MMS_events/MP_Reconnection/20160214_204150_20160214_204210.h5'
+# fname = r'/home/sroy/Documents/MMS_events/Tail_Reconnection/20170617_202403_20170617_202411.h5'
+fname = r'/home/sroy/Documents/MMS_events/MP_Reconnection/20160214_204150_20160214_204210.h5'
 # fname = r'/home/sroy/Documents/MMS_events/MP_Reconnection/20151208_112042_20151208_112045.h5'
 
 plt.rcParams['text.usetex'] = True
