@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # trange = ['2017-01-01/14:17:00', '2017-01-01/14:17:30'] #Prayash new interval (e-only within ion jets)
     # trange = ['2015-10-16/13:06:00', '2015-10-16/13:08:00'] # Burch 2016 event
     # trange = ['2015-09-08/11:01:17', '2015-09-08/11:01:23'] # Eriksson 2016 event
-    trange = ['2015-12-08/11:20:00', '2015-12-08/11:21:00'] # Burch and Phan 2016 event
+    # trange = ['2015-12-08/11:20:00', '2015-12-08/11:21:00'] # Burch and Phan 2016 event
     
     # trange = ['2018-04-15/04:32:15', '2018-04-15/04:33:45'] # Burch et. al. 2020 event
     # trange = ['2015-09-08/11:00:04', '2015-09-08/11:02:00'] # Eriksson et. al. 2016
@@ -71,13 +71,15 @@ if __name__ == "__main__":
 
    # interval_list = pd.read_csv(r'/home/sohom/MMS_PySPEDAS/interval_list.txt', delim_whitespace=True, header=None, names=['start_time', 'end_time', 'duration'])    
 
-    trange = ['2015-11-04/04:35:05', '2015-11-04/04:35:10'] # Wilder event (2018)
+    # trange = ['2015-11-04/04:35:05', '2015-11-04/04:35:10'] # Wilder event (2018)
 
     # trange = ['2017-06-19/04:59:00', '2017-06-19/05:00:00']
 
-    data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
-    # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
-    data_dir = r'/home/sohom/Documents/MMS_events/MP_Reconnection'
+    trange = ['2017-06-11/17:01:00', '2017-06-11/17:02:00']
+
+    # data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
+    data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    # data_dir = r'/home/sohom/Documents/MMS_events/MP_Reconnection'
 
     data = dict()
     

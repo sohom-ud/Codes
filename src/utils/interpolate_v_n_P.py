@@ -26,10 +26,13 @@ def interpolate_v_n_P(data, species='ion'):
 
     # Find minimum start time and maximum end time
     for probe in probe_list:
-        max_start_time = max(max_start_time, data[f'v_{species}_{probe}']['Epoch'][0])
-        min_end_time = min(min_end_time, data[f'v_{species}_{probe}']['Epoch'][-1])
+        max_start_time = max(max_start_time, data[f'N_{species}_{probe}']['Epoch'][0])
+        min_end_time = min(min_end_time, data[f'N_{species}_{probe}']['Epoch'][-1])
 
-    for var in ['v', 'v_spin', 'v_spincorr', 'N', 'Ptensor', 'Temptensor', 'v_err', 'N_err', 'Ptensor_err', 'Temptensor_err', 'heatflux', 'heatflux_err']:
+    for var in ['N', 'N_bg', 'N_err', 'v', 'v_spin', 'v_spincorr', 'v_err', 'Ptensor', 'Ptensor_bg', 'Ptensor_err', 'Temptensor', 'Temptensor_err', 'heatflux', 'heatflux_err']:
+
+        if 'bg' in var and species=='elc':
+            continue
 
         for probe in probe_list:
             print(var)
@@ -50,7 +53,7 @@ def interpolate_v_n_P(data, species='ion'):
             f = interp1d(t, v, axis=0, kind='quadratic', fill_value="extrapolate")
 
             # tnew = np.arange(max_start_time, min_end_time, dt)
-            tnew = data[f'{var}_{species}_1']['Epoch'][np.logical_and(data[f'{var}_{species}_1']['Epoch']>max_start_time, data[f'{var}_{species}_1']['Epoch']<min_end_time)]
+            tnew = data[f'N_{species}_1']['Epoch'][np.logical_and(data[f'N_{species}_1']['Epoch']>max_start_time, data[f'N_{species}_1']['Epoch']<min_end_time)]
 
             data[f'{var}_{species}_{probe}']['Epoch'] = tnew
             data[f'{var}_{species}_{probe}']['Values'] = f(tnew)
