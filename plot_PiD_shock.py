@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 base_dir = rf'/home/sroy/Documents/MMS_events/Shock'
 
 interval = '20171102_042623_20171102_042730'
+# interval = '20151007_113000_20151007_114000'
 
 fname = os.path.join(base_dir, f'{interval}.h5')
 
@@ -31,27 +32,44 @@ PSe = compute_PS(fname, species='elc')
 PStotal = pd.DataFrame(index=PSi.index)
 PStotal['PS'] = PSi['PS_ion'] + PSe['PS_elc'] 
 
-jdotE = compute_jdotE(fname)
+jdotEprime = compute_jdotEprime(fname)
+
+smooth_window = '300ms'
+
+PiDi = PiDi.rolling(window=smooth_window).mean()
+PiDe = PiDe.rolling(window=smooth_window).mean()
+
+pthi = pthi.rolling(window=smooth_window).mean()
+pthe = pthe.rolling(window=smooth_window).mean()
+
+PSi = PSi.rolling(window=smooth_window).mean()
+PSe = PSe.rolling(window=smooth_window).mean()
+
+PStotal = PStotal.rolling(window=smooth_window).mean()
+jdotEprime = jdotEprime.rolling(window=smooth_window).mean()
 
 start_time = datetime(2017, 11, 2, 4, 26, 35)
 end_time = datetime(2017, 11, 2, 4, 26, 55)
+
+# start_time = datetime(2015, 10, 7, 11, 30)
+# end_time = datetime(2015, 10, 7, 11, 40)
 
 plt.rcParams['font.family'] = 'serif'
 
 fig, axs = plt.subplots(5, 1, sharex=True, figsize=(6, 8))
 
-axs[0].plot(PiDe.index, -PiDe.values, color='#1f77b4', lw=1, label='ion')
-axs[0].plot(PiDi.index, -PiDi.values, color='#d62728', label='electron')
+axs[0].plot(PiDe.index, -PiDe.values, color='#1f77b4', lw=1, label='electron')
+axs[0].plot(PiDi.index, -PiDi.values, color='#d62728', label='ion')
 
-axs[1].plot(pthe.index, -pthe.values, color='#1f77b4', lw=1, label='ion')
-axs[1].plot(pthi.index, -pthi.values, color='#d62728', label='electron')
+axs[1].plot(pthe.index, -pthe.values, color='#1f77b4', lw=1, label='electron')
+axs[1].plot(pthi.index, -pthi.values, color='#d62728', label='ion')
 
-axs[2].plot(PSe.index, -PSe.values, color='#1f77b4', lw=1, label='ion')
-axs[2].plot(PSi.index, -PSi.values, color='#d62728', label='electron')
+axs[2].plot(PSe.index, -PSe.values, color='#1f77b4', lw=1, label='electron')
+axs[2].plot(PSi.index, -PSi.values, color='#d62728', label='ion')
 
 axs[3].plot(PStotal.index, -PStotal.values, color='k', lw=1)
 
-axs[4].plot(jdotE.index, jdotE.values, color='k', lw=1)
+axs[4].plot(jdotEprime.index, jdotEprime.values, color='k', lw=1)
 
 upstream_start = datetime(2017, 11, 2, 4, 26, 35)
 upstream_end = datetime(2017, 11, 2, 4, 26, 36)
@@ -69,7 +87,7 @@ axs[0].set_ylabel(r'$-\Pi_{ij}^{(\alpha)}\mathrm{D}_{ij}^{(\alpha)}$', fontsize=
 axs[1].set_ylabel(r'$-p^{(\alpha)}\theta^{(\alpha)}$', fontsize=12)
 axs[2].set_ylabel(r'$-\left(\mathbf{P}^{(\alpha)}.\nabla\right)\cdot\mathbf{u}^{(\alpha)}$', fontsize=12)
 axs[3].set_ylabel(r'$-\displaystyle\sum_\alpha \left(\mathbf{P}^{(\alpha)}.\nabla\right)\cdot\mathbf{u}^{(\alpha)}$', fontsize=12)
-axs[4].set_ylabel(r'$\mathbf{j}\cdot\mathbf{E}$', fontsize=12)
+axs[4].set_ylabel(r'$\mathbf{j}\cdot\mathbf{E}^\prime$', fontsize=12)
 
 for ax in axs[0:3]:
     ax.legend(fontsize=10, bbox_to_anchor=(1, 1), loc='upper left')
@@ -91,6 +109,6 @@ axs[0].text(-0.2, 1,'[nW/m$^3$]', color='k', fontsize=9, transform=axs[0].transA
 
 plt.tight_layout()
 
-plt.savefig('PiD_shock.png', bbox_inches='tight', dpi=300)
+plt.savefig(f'PiD_shock_20171102_smooth_{smooth_window}.png', bbox_inches='tight', dpi=300)
 
 plt.close()

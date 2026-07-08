@@ -14,3 +14,5 @@ phi_bins = dist['mms1_dis_phi_brst']['y'][0]
 f = dist['mms1_dis_dist_brst']['y'][0]
 f_err = dist['mms1_dis_disterr_brst']['y'][0]
 
+U_bins = E_bins / (E_bins + 100)
+

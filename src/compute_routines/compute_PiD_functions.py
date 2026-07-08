@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from src.utils.hdf_to_df import hdf_to_df
 from src.utils.resample import resample
+from src.utils.methods import dot, cross
 
 # Computes the Pi tensor from .h5 file
 
@@ -213,6 +214,35 @@ def compute_jdotE(fname):
 
     return jdotE_df
 
+def compute_jdotEprime(fname):
+
+    j = compute_jcurl(fname)
+
+    df_dict = hdf_to_df(fname)
+
+    E = dict()
+    ve = dict()
+    vecrossB = dict()
+    B = dict()
+
+    jdotEprime = 0.0
+
+    for probe in [1, 2, 3, 4]:
+
+        ve[probe] = df_dict[f'v_spincorr_elc_{probe}']*1e3
+        E[probe] = resample(df_dict[f'edp_dce_gse_{probe}'], ve[1])*1e-3
+        B[probe] = resample(df_dict[f'b_gse_{probe}'], ve[1])*1e-9
+
+        B[probe] = B[probe].drop('mag', axis=1)
+
+        vecrossB[probe] = cross(ve[probe], B[probe])
+
+        jdotEprime += dot(j, E[probe] + vecrossB[probe])
+
+    jdotEprime /= 4.0
+
+    return jdotEprime
+
 def compute_jpart(fname):
 
     e = 1.6e-19
@@ -293,15 +323,3 @@ def compute_Q_j(fname):
     Q_j = (1/4.) * jsq / jsqmean
 
     return Q_j
-
-# def compute_R_D(fname, species='ion', reselectron=True):
-
-#     Dij = compute_Dij(fname, species, reselectron)
-
-#     R = (Dij['xx'] * (Dij['yy'] * Dij['zz'] - Dij['yz'] ** 2)
-#         - Dij['xy'] * (Dij['yx'] * Dij['zz'] - Dij['zx'] * Dij['yz'])
-#         + Dij['xz'] * (Dij['yx'] * Dij['zy'] - Dij['zx'] * Dij['yy']))
-    
-#     R / = np.std(R)
-
-#     return R

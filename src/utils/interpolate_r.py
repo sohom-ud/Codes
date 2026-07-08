@@ -19,13 +19,13 @@ def interpolate_r(data, res='B'):
     # Want to clip time series from all 4 s/c so that the start and end times match
     # Our approach here is to find the maximum start time and minimum end time for all 4 s/c.
 
-    # Find minimum start time and maximum end time
+    # Find maximum start time and minimum end time
     for probe in [1, 2, 3, 4]:
         
         max_start_time = max(max_start_time, data[f'{var}_{probe}']['Epoch'][0])
         min_end_time = min(min_end_time, data[f'{var}_{probe}']['Epoch'][-1])
 
-    # tnew = np.arange(max_start_time, min_end_time, dt)
+    #Create a new time series spanning from max_start_time to min_end_time matching the timestamps of either ion velocity, electron velocity or magnetic field from MMS1
     tnew = data[f'{var}_1']['Epoch'][np.logical_and(data[f'{var}_1']['Epoch']>max_start_time, data[f'{var}_1']['Epoch']<min_end_time)]
 
     for probe in [1, 2, 3, 4]:
@@ -38,15 +38,14 @@ def interpolate_r(data, res='B'):
         df.set_index(0, inplace=True)
 
         df = df.drop_duplicates()
-        
-        # df.index = pd.to_datetime(df.index)
-        
+                
         for col in df.columns:
             df[col] = pd.to_numeric(df[col])
 
         t = df.index
         r = df.values
 
+        #Perform a quadratic interpolation on the spacecraft positions
         f = interp1d(t, r, axis=0, kind='quadratic', fill_value="extrapolate")
 
         # Resampling positions to tnew

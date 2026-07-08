@@ -75,11 +75,15 @@ if __name__ == "__main__":
 
     # trange = ['2017-06-19/04:59:00', '2017-06-19/05:00:00']
 
-    trange = ['2017-06-11/17:01:00', '2017-06-11/17:02:00']
+    # trange = ['2017-06-11/17:01:00', '2017-06-11/17:02:00']
+    
+    trange = ['2017-11-02/04:26:35', '2017-11-02/04:26:55']
 
     # data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
-    data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
+    # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
     # data_dir = r'/home/sohom/Documents/MMS_events/MP_Reconnection'
+
+    data_dir = r'/home/sroy/Documents/MMS_events/Shock'
 
     data = dict()
     
