@@ -16,7 +16,7 @@ PROBES = [1, 2, 3, 4]
 #             KINETIC ENERGY             
 #========================================
 
-def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
+def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0], L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -39,7 +39,7 @@ def compute_kinetic_energy(fname, species='ion', probe=1, reselectron=True, v_xl
 
     return Ef
 
-def compute_kinetic_energy_flux(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
+def compute_kinetic_energy_flux(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0], L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -60,7 +60,7 @@ def compute_kinetic_energy_flux(fname, species='ion', probe=1, reselectron=True,
 
     return F_K
 
-def compute_kinetic_energy_transport(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
+def compute_kinetic_energy_transport(fname, species='ion', reselectron=True, v_xl=[0,0,0], L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     F_K_dict = dict()
     k_dict = dict()
@@ -105,7 +105,7 @@ def compute_thermal_energy(fname, species='ion', probe=1, reselectron=True):
 
     return E_th
 
-def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
+def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0], L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -126,7 +126,7 @@ def compute_thermal_energy_flux(fname, species='ion', probe=1, reselectron=True,
 
     return F_th
 
-def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
+def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0], L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     F_th_dict = dict()
     k_dict = dict()
@@ -154,7 +154,7 @@ def compute_thermal_energy_transport(fname, species='ion', probe=1, reselectron=
 #=========================================
 #              PRESSURE WORK              
 #=========================================
-def compute_pressure_work(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
+def compute_pressure_work(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0], L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -181,7 +181,7 @@ def compute_pressure_work(fname, species='ion', probe=1, reselectron=True, v_xl=
 
     return F_P
 
-def compute_pressure_work_transport(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}, L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
+def compute_pressure_work_transport(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0], L=[1, 0, 0], M=[0, 1, 0], N=[0, 0, 1]):
 
     F_P_dict = dict()
     k_dict = dict()

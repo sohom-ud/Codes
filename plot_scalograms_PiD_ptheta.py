@@ -12,7 +12,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 base_dir = r'/home/sroy/Documents/MMS_events/Shock'
 
-interval = r'20151007_113000_20151007_114000'
+# interval = r'20151007_113000_20151007_114000'
+interval = r'20171102_042623_20171102_042730'
 
 fname = os.path.join(base_dir, f'{interval}.h5')
 filtered_fname = os.path.join(base_dir, 'scale_filtering', f'{interval}_filtered.h5')
@@ -34,15 +35,21 @@ B = np.sqrt(np.nanmean(B1['x']**2 + B1['y']**2 + B1['z']**2))
 di_loc = 2.28e7/np.sqrt(ni1) * 1e-5 * 2 * np.pi
 rhoi_loc = 1.02e2 * np.sqrt(Ti)/B * 2 * np.pi
 
-PSi = -filtered_data['PSi']['Values'][...]
-PSe = -filtered_data['PSe']['Values'][...]
-PS = PSi + PSe
-Lambda_ub_i = -filtered_data['Lambda_ub_i']['Values']['1'][...]
-Lambda_ub_e = -filtered_data['Lambda_ub_e']['Values']['1'][...]
-Lambda_ub_i_e = Lambda_ub_i + Lambda_ub_e
+PiDi = -filtered_data['PiDi']['Values'][...]
+PiDe = -filtered_data['PiDe']['Values'][...]
 
-start_time = datetime(2015, 10, 7, 11, 34, 50)
-end_time = datetime(2015, 10, 7, 11, 35, 30)
+pthi = -filtered_data['pthi']['Values'][...]
+pthe = -filtered_data['pthe']['Values'][...]
+# PS = PSi + PSe
+# Lambda_ub_i = -filtered_data['Lambda_ub_i']['Values']['1'][...]
+# Lambda_ub_e = -filtered_data['Lambda_ub_e']['Values']['1'][...]
+# Lambda_ub_i_e = Lambda_ub_i + Lambda_ub_e
+
+# start_time = datetime(2015, 10, 7, 11, 34, 50)
+# end_time = datetime(2015, 10, 7, 11, 35, 30)
+
+start_time = datetime(2017, 11, 2, 4, 26, 35)
+end_time = datetime(2017, 11, 2, 4, 26, 55)
 
 start_time_idx = np.abs(epoch - start_time).argmin()
 end_time_idx = np.abs(epoch - end_time).argmin()
@@ -56,38 +63,27 @@ plt.rcParams['ytick.labelsize'] = fs
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams['text.usetex'] = True
 
-fig, axs = plt.subplots(6, 1, figsize=(60, 84), sharex=True)
+fig, axs = plt.subplots(4, 1, figsize=(60, 56), sharex=True)
 
-PSi_im = axs[0].imshow(PSi, origin='lower', cmap='RdBu_r', aspect='auto', 
+PiDi_im = axs[0].imshow(PiDi, origin='lower', cmap='RdBu_r', aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-35, vmax=35,
+           vmin=-0.5, vmax=0.5,
            interpolation='gaussian')
 
-PSe_im = axs[1].imshow(PSe, origin='lower', cmap='RdBu_r', aspect='auto', 
+PiDe_im = axs[1].imshow(PiDe, origin='lower', cmap='RdBu_r', aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-15, vmax=15,
+           vmin=-0.1, vmax=0.1,
            interpolation='gaussian')
 
-PS_im = axs[2].imshow(PS, origin='lower', cmap='RdBu_r', aspect='auto', 
+pthi_im = axs[2].imshow(pthi, origin='lower', cmap='RdBu_r', aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-35, vmax=35,
+           vmin=-1, vmax=1,
            interpolation='gaussian')
 
-Lambda_ub_i_im = axs[3].imshow(Lambda_ub_i, origin='lower', cmap='RdBu_r', aspect='auto', 
+pthe_im = axs[3].imshow(pthe, origin='lower', cmap='RdBu_r', aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-35, vmax=35,
+           vmin=-1, vmax=1,
            interpolation='gaussian')
-
-Lambda_ub_e_im = axs[4].imshow(Lambda_ub_e, origin='lower', cmap='RdBu_r', aspect='auto', 
-           extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-30, vmax=30,
-           interpolation='gaussian')
-
-Lambda_ub_i_e_im = axs[5].imshow(Lambda_ub_i_e, origin='lower', cmap='RdBu_r', aspect='auto', 
-           extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-20, vmax=20,
-           interpolation='gaussian')
-
 
 locator = mdates.SecondLocator(interval=5)
 formatter = mdates.ConciseDateFormatter(locator)
@@ -105,35 +101,25 @@ cax_y = 0.5
 
 divider = make_axes_locatable(axs[0])
 cax = divider.append_axes('right', size=cax_size, pad=cax_pad)
-fig.colorbar(PSi_im, cax=cax, orientation='vertical')
-cax.text(cax_x, cax_y, r'$PS_\mathrm{i}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
+fig.colorbar(PiDi_im, cax=cax, orientation='vertical')
+cax.text(cax_x, cax_y, r'$PiD_\mathrm{i}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
 cax.set_title('[nW/m$^3]$', fontsize=fs, y=1.1)
 
 divider = make_axes_locatable(axs[1])
 cax = divider.append_axes('right', size=cax_size, pad=cax_pad)
-fig.colorbar(PSe_im, cax=cax, orientation='vertical')
-cax.text(cax_x, cax_y, r'$PS_\mathrm{e}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
+fig.colorbar(PiDe_im, cax=cax, orientation='vertical')
+cax.text(cax_x, cax_y, r'$PiD_\mathrm{e}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
 
 divider = make_axes_locatable(axs[2])
 cax = divider.append_axes('right', size=cax_size, pad=cax_pad/2)
-fig.colorbar(PS_im, cax=cax, orientation='vertical')
+fig.colorbar(pthi_im, cax=cax, orientation='vertical')
 # cax.text(cax_x, cax_y, r'$\sum\limits_\alpha PS_\alpha^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
-cax.text(cax_x, cax_y, r'$PS_\textrm{total}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
+cax.text(cax_x, cax_y, r'$p\theta_\mathrm{i}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
 
 divider = make_axes_locatable(axs[3])
 cax = divider.append_axes('right', size=cax_size, pad=cax_pad)
-fig.colorbar(Lambda_ub_i_im, cax=cax, orientation='vertical')
-cax.text(cax_x, cax_y, r'$W_\mathrm{i}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
-
-divider = make_axes_locatable(axs[4])
-cax = divider.append_axes('right', size=cax_size, pad=cax_pad)
-fig.colorbar(Lambda_ub_e_im, cax=cax, orientation='vertical')
-cax.text(cax_x, cax_y, r'$W_\mathrm{e}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
-
-divider = make_axes_locatable(axs[5])
-cax = divider.append_axes('right', size=cax_size, pad=cax_pad)
-fig.colorbar(Lambda_ub_i_e_im, cax=cax, orientation='vertical')
-cax.text(cax_x, cax_y, r'$W_\textrm{total}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
+fig.colorbar(pthe_im, cax=cax, orientation='vertical')
+cax.text(cax_x, cax_y, r'$p\theta_\mathrm{e}^<$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
 
 shock_crossing_time = datetime(2015, 10, 7, 11, 35, 8)
 
@@ -157,9 +143,7 @@ axs[0].text(x_annotate, y_annotate, '(a)', fontsize=fs, transform=axs[0].transAx
 axs[1].text(x_annotate, y_annotate, '(b)', fontsize=fs, transform=axs[1].transAxes)
 axs[2].text(x_annotate, y_annotate, '(c)', fontsize=fs, transform=axs[2].transAxes)
 axs[3].text(x_annotate, y_annotate, '(d)', fontsize=fs, transform=axs[3].transAxes)
-axs[4].text(x_annotate, y_annotate, '(e)', fontsize=fs, transform=axs[4].transAxes)
-axs[5].text(x_annotate, y_annotate, '(f)', fontsize=fs, transform=axs[5].transAxes)
 
 plt.tight_layout()
 
-plt.savefig(r'/home/sroy/Documents/Codes/20151007_113000_20151007_114000_diss.png', dpi=300)
+plt.savefig(r'/home/sroy/Documents/Codes/20171102_042623_20171102_042730_PiD_ptheta.png', dpi=300)

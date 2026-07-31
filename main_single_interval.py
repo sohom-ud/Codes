@@ -77,13 +77,26 @@ if __name__ == "__main__":
 
     # trange = ['2017-06-11/17:01:00', '2017-06-11/17:02:00']
     
-    trange = ['2017-11-02/04:26:35', '2017-11-02/04:26:55']
+    # trange = ['2017-11-02/04:26:35', '2017-11-02/04:26:55']
+
+    # trange = ['2015-10-07/11:30:00', '2015-10-07/11:40:00']
+    # trange = ['2015-10-21/07:40:00', '2015-10-21/07:50:00']
+    # trange = ['2015-10-25/07:55:00', '2015-10-25/08:10:00']
+
+    # trange = ['2018-04-23/07:50:10', '2018-04-23/07:52:40']  #Aditi event study #1(no PiD, but temp anisotropy)
+    # trange = ['2017-09-28/06:31:50', '2017-09-28/06:33:30']  #Aditi event study #2(whistlers generated without temp anisotropy, PiD also present)
+
+    # trange = ['2017-12-26/06:12:43', '2017-12-26/06:52:23'] #MSH turbulence interval
+
+    # trange = ['2017-12-26/06:12:00', '2017-12-26/06:16:00']
+
+    trange = ['2015-11-30/00:24:00', '2015-11-30/00:27:00']
 
     # data_dir = r'/home/sroy/Documents/MMS_events/MSH_Reconnection'
     # data_dir = r'/home/sroy/Documents/MMS_events/Tail_Reconnection'
     # data_dir = r'/home/sohom/Documents/MMS_events/MP_Reconnection'
 
-    data_dir = r'/home/sroy/Documents/MMS_events/Shock'
+    data_dir = r'/home/sroy/Documents/MMS_events/MSH_Turbulence'
 
     data = dict()
     
@@ -127,15 +140,6 @@ if __name__ == "__main__":
         # data[key]['Epoch'] = np.array([pd.Timestamp(x).to_julian_date() for x in data[key]['Epoch']])
         data[key]['Epoch'] = pd.DatetimeIndex(data[key]['Epoch']).to_julian_date()
 
-    #Compute reciprocal vectors
-    print("Computing reciprocal vectors at different resolutions...")
-    k_B = compute_k(data) 
-    k_vi = compute_k(data, res='vi')
-    k_ve = compute_k(data, res='ve')
-
-    data = dict(data, **k_B)    
-    data = dict(data, **k_vi)
-    data = dict(data, **k_ve)
     # # Interpolate velocity, density, pressure so that all timestamps match
     print("Interpolating ion velocities, densities, pressures to common epochs...")
     interpolate_v_n_P(data, 'ion')
@@ -151,6 +155,16 @@ if __name__ == "__main__":
 
     print("Resampling ion velocities, densities and pressures to electron resolution...")
     resample_v_n_P(data)        
+
+    #Compute reciprocal vectors
+    print("Computing reciprocal vectors at different resolutions...")
+    k_B = compute_k(data) 
+    k_vi = compute_k(data, res='vi')
+    k_ve = compute_k(data, res='ve')
+
+    data = dict(data, **k_B)    
+    data = dict(data, **k_vi)
+    data = dict(data, **k_ve)
 
     # fgm_data = time_clip(fgm_data, trange)
     # k = time_clip(k, trange)

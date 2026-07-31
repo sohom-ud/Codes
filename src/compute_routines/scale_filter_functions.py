@@ -532,47 +532,47 @@ def compute_all_filtered(fname, t, unit, win_gauss=0, species='ion', reselectron
     rho_filt = {probe: filt(m * n[probe], t, unit, win_gauss, species) for probe in [1, 2, 3, 4]}
     n_filt = {probe: filt(n[probe], t, unit, win_gauss, species) for probe in [1, 2, 3, 4]}
 
-    # P_filtered = compute_P_filtered(fname, t, unit, win_gauss, species, reselectron)
+    P_filtered = compute_P_filtered(fname, t, unit, win_gauss, species, reselectron)
     
-    # Pi = compute_Pi_ij(fname, species, reselectron)
+    Pi = compute_Pi_ij(fname, species, reselectron)
     
-    # Pi_filtered = filt(Pi, t, unit, win_gauss, species)
+    Pi_filtered = filt(Pi, t, unit, win_gauss, species)
        
-    # S_filtered = compute_S_filtered(fname, t, unit, win_gauss, species, reselectron)
+    S_filtered = compute_gradv_filtered(fname, t, unit, win_gauss, species, reselectron)
 
-    # theta_filtered = (S_filtered['dxvx'] + S_filtered['dyvy'] + S_filtered['dzvz'])
+    theta_filtered = (S_filtered['dxvx'] + S_filtered['dyvy'] + S_filtered['dzvz'])
 
-    # D_filtered = pd.DataFrame()
-    # D_filtered.index = S_filtered.index
+    D_filtered = pd.DataFrame()
+    D_filtered.index = S_filtered.index
 
-    # p = compute_p(fname, species, reselectron)
+    p = compute_p(fname, species, reselectron)
 
-    # p_filtered = filt(p, t, unit, win_gauss, species)
+    p_filtered = filt(p, t, unit, win_gauss, species)
     
-    # theta_filtered = (S_filtered['dxvx'] + S_filtered['dyvy'] + S_filtered['dzvz'])
+    theta_filtered = (S_filtered['dxvx'] + S_filtered['dyvy'] + S_filtered['dzvz'])
 
-    # ptheta_filtered = pd.DataFrame()
-    # ptheta_filtered.index = p_filtered.index
+    ptheta_filtered = pd.DataFrame()
+    ptheta_filtered.index = p_filtered.index
 
-    # ptheta_filtered[f'ptheta_{species}'] = p_filtered.values * theta_filtered.values
+    ptheta_filtered[f'ptheta_{species}'] = p_filtered.values * theta_filtered.values
 
-    # PS_filtered = pd.DataFrame()
-    # PS_filtered.index = P_filtered.index
-    # PS_filtered[f'PS_{species}'] = 0.0
+    PS_filtered = pd.DataFrame()
+    PS_filtered.index = P_filtered.index
+    PS_filtered[f'PS_{species}'] = 0.0
     
-    # for comp1 in ['x', 'y', 'z']:
-    #     for comp2 in ['x', 'y', 'z']:
-    #         D_filtered[f'{comp1}{comp2}'] = (S_filtered[f'd{comp1}v{comp2}'] + S_filtered[f'd{comp2}v{comp1}'])/2.0 - (theta_filtered * (comp1 == comp2))/3.0
+    for comp1 in ['x', 'y', 'z']:
+        for comp2 in ['x', 'y', 'z']:
+            D_filtered[f'{comp1}{comp2}'] = (S_filtered[f'd{comp1}v{comp2}'] + S_filtered[f'd{comp2}v{comp1}'])/2.0 - (theta_filtered * (comp1 == comp2))/3.0
 
-    # PiD_filtered = pd.DataFrame()
+    PiD_filtered = pd.DataFrame()
 
-    # PiD_filtered.index = Pi_filtered.index
-    # PiD_filtered[f'PiD_{species}'] = 0.0
+    PiD_filtered.index = Pi_filtered.index
+    PiD_filtered[f'PiD_{species}'] = 0.0
 
-    # for comp1 in ['x', 'y', 'z']:
-    #     for comp2 in ['x', 'y', 'z']:
-    #         PiD_filtered[f'PiD_{species}'] += Pi_filtered[f'{comp1}{comp2}'] * D_filtered[f'{comp1}{comp2}']
-    #         PS_filtered[f'PS_{species}'] += P_filtered[f'{comp1}{comp2}'] * S_filtered[f'd{comp1}v{comp2}']
+    for comp1 in ['x', 'y', 'z']:
+        for comp2 in ['x', 'y', 'z']:
+            PiD_filtered[f'PiD_{species}'] += Pi_filtered[f'{comp1}{comp2}'] * D_filtered[f'{comp1}{comp2}']
+            PS_filtered[f'PS_{species}'] += P_filtered[f'{comp1}{comp2}'] * S_filtered[f'd{comp1}v{comp2}']
 
     tau_u = {probe: favre_filt(mult(v[probe], v[probe]), t, n[probe], unit, win_gauss, species) - mult(favre_filt(v[probe], t, n[probe], unit, win_gauss, species), favre_filt(v[probe], t, n[probe], unit, win_gauss, species)) for probe in [1, 2, 3, 4]}
     tau_b = {probe: favre_filt(cross(v[probe], B[probe]), t, n[probe], unit, win_gauss, species) - cross(favre_filt(v[probe], t, n[probe], unit, win_gauss, species), favre_filt(B[probe], t, n[probe], unit, win_gauss, species)) for probe in [1, 2, 3, 4]}
@@ -602,8 +602,8 @@ def compute_all_filtered(fname, t, unit, win_gauss=0, species='ion', reselectron
 
     Pi_bb = {probe: - q * n_filt[probe].values * dot(tau_e[probe], v_favre_filt[probe]) * 1e6 for probe in [1, 2, 3, 4]}
 
-    # return PiD_filtered, ptheta_filtered, PS_filtered, Pi_uu, Pi_bb, Lambda_ub
-    return Pi_uu, Pi_bb, Lambda_ub
+    return PiD_filtered, ptheta_filtered, PS_filtered, Pi_uu, Pi_bb, Lambda_ub
+    # return Pi_uu, Pi_bb, Lambda_ub
 
 def calc_trace_S3_filtered(fname, t, unit, win_gauss=0, species='ion', reselectron=True):
 

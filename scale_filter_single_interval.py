@@ -16,7 +16,8 @@ if not os.path.exists(data_dir):
 gaussian_window_flag = 0
 
 # file = '20151209_050300_20151209_050400.h5' #Reconnection event is contained in this interval
-file = '20151007_113000_20151007_114000.h5' #Shock crossing is contained in this interval
+# file = '20151007_113000_20151007_114000.h5' #Shock crossing is contained in this interval
+file = '20171102_042623_20171102_042730.h5'
 
 fname = os.path.join(base_dir, file)
 
@@ -32,7 +33,7 @@ length_int = int((df_dict['v_spincorr_ion_1'].index[-1] - df_dict['v_spincorr_io
 
 trange = np.arange(step, max_timescale, step)
 
-vars = ['PSi', 'PSe', 'Pi_uu_i', 'Pi_bb_i', 'Lambda_ub_i', 'Pi_uu_e', 'Pi_bb_e', 'Lambda_ub_e']
+vars = ['PiDi', 'PiDe', 'pthi', 'pthe', 'PSi', 'PSe', 'Pi_uu_i', 'Pi_bb_i', 'Lambda_ub_i', 'Pi_uu_e', 'Pi_bb_e', 'Lambda_ub_e']
 keys = ['Epochs', 'tscales', 'Values']
 nested_list = ['Pi_bb_i', 'Pi_bb_e', 'Lambda_ub_i', 'Lambda_ub_e']
 

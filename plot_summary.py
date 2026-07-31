@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 from src.utils.hdf_to_df import hdf_to_df
 import pandas
 
-interval = r'20170711_223330_20170711_223430'
-fname = rf'/home/sroy/Documents/IWF_research/MMS_events/Tail_Reconnection/{interval}.h5'
+interval = r'20180423_075010_20180423_075240'
+fname = rf'/home/sroy/Documents/MMS_events/MSH_Turbulence/{interval}.h5'
 
 df_dict = hdf_to_df(fname)
 

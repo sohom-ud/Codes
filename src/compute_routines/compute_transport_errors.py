@@ -12,7 +12,7 @@ mu_0 = 4*np.pi*1e-7
 comps = ['x', 'y', 'z']
 PROBES = [1, 2, 3, 4]
 
-def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
+def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -58,7 +58,7 @@ def compute_Ef_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl={'
 
     return err
 
-def compute_Ef_transport_err(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
+def compute_Ef_transport_err(fname, species='ion', reselectron=True, v_xl=[0,0,0]):
 
     k_dict = dict()
     F_K_err_dict = dict()
@@ -87,7 +87,7 @@ def compute_Ef_transport_err(fname, species='ion', reselectron=True, v_xl={'x':0
 
     return err
 
-def compute_Eth_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
+def compute_Eth_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -120,7 +120,7 @@ def compute_Eth_flux_err(fname, species='ion', probe=1, reselectron=True, v_xl={
 
     return err
 
-def compute_Eth_transport_err(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
+def compute_Eth_transport_err(fname, species='ion', reselectron=True, v_xl=[0,0,0]):
 
     k_dict = dict()
     F_T_err_dict = dict()
@@ -149,7 +149,7 @@ def compute_Eth_transport_err(fname, species='ion', reselectron=True, v_xl={'x':
 
     return err
 
-def compute_pressure_work_err(fname, species='ion', probe=1, reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
+def compute_pressure_work_err(fname, species='ion', probe=1, reselectron=True, v_xl=[0,0,0]):
 
     use_reselectron = (species == 'ion') and reselectron
     suffix = f'_{species}_{probe}' + ('_reselectron' if use_reselectron else '')
@@ -184,7 +184,7 @@ def compute_pressure_work_err(fname, species='ion', probe=1, reselectron=True, v
 
     return err
 
-def compute_pressure_work_transport_err(fname, species='ion', reselectron=True, v_xl={'x':0.0, 'y':0.0, 'z':0.0}):
+def compute_pressure_work_transport_err(fname, species='ion', reselectron=True, v_xl=[0,0,0]):
 
     k_dict = dict()
     P_W_err_dict = dict()

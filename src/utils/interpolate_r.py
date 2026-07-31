@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from scipy.interpolate import interp1d
+from src.utils.resample import resample
+
+PROBES = [1, 2, 3, 4]
 
 def interpolate_r(data, res='B'):
     
@@ -19,14 +22,16 @@ def interpolate_r(data, res='B'):
     # Want to clip time series from all 4 s/c so that the start and end times match
     # Our approach here is to find the maximum start time and minimum end time for all 4 s/c.
 
-    # Find maximum start time and minimum end time
-    for probe in [1, 2, 3, 4]:
+    # # Find maximum start time and minimum end time
+    # for probe in [1, 2, 3, 4]:
         
-        max_start_time = max(max_start_time, data[f'{var}_{probe}']['Epoch'][0])
-        min_end_time = min(min_end_time, data[f'{var}_{probe}']['Epoch'][-1])
+    #     max_start_time = max(max_start_time, data[f'{var}_{probe}']['Epoch'][0])
+    #     min_end_time = min(min_end_time, data[f'{var}_{probe}']['Epoch'][-1])
 
-    #Create a new time series spanning from max_start_time to min_end_time matching the timestamps of either ion velocity, electron velocity or magnetic field from MMS1
-    tnew = data[f'{var}_1']['Epoch'][np.logical_and(data[f'{var}_1']['Epoch']>max_start_time, data[f'{var}_1']['Epoch']<min_end_time)]
+    # #Create a new time series spanning from max_start_time to min_end_time matching the timestamps of either ion velocity, electron velocity or magnetic field from MMS1
+    # tnew = data[f'{var}_1']['Epoch'][np.logical_and(data[f'{var}_1']['Epoch']>=max_start_time, data[f'{var}_1']['Epoch']<=min_end_time)]
+
+    tnew = data[f'{var}_1']['Epoch']
 
     for probe in [1, 2, 3, 4]:
 

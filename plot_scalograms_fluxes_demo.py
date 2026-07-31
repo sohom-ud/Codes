@@ -10,8 +10,10 @@ from src.utils.hdf_to_df import hdf_to_df
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # base_dir = PATH TO DATA DIRECTORY GOES HERE
+base_dir = r'/home/sroy/Documents/MMS_events/Shock'
 
-interval = r'20151209_050300_20151209_050400'
+# interval = r'20151209_050300_20151209_050400'
+interval = r'20151007_113000_20151007_114000'
 
 fname = os.path.join(base_dir, f'{interval}.h5')
 filtered_fname = os.path.join(base_dir, 'scale_filtering', f'{interval}_filtered.h5')
@@ -45,8 +47,11 @@ Pi_uu_i_e = Pi_uu_i + Pi_uu_e
 Pi_bb_i_e = Pi_bb_i + Pi_bb_e
 Pi_uu_bb_i_e = Pi_uu_i + Pi_uu_e + Pi_bb_i + Pi_bb_e
 
-start_time = datetime(2015, 12, 9, 5, 3, 56)
-end_time = datetime(2015, 12, 9, 5, 3, 58)
+# start_time = datetime(2015, 12, 9, 5, 3, 56)
+# end_time = datetime(2015, 12, 9, 5, 3, 58)
+
+start_time = datetime(2015, 10, 7, 11, 34, 50)
+end_time = datetime(2015, 10, 7, 11, 35, 30)
 
 start_time_idx = np.abs(epoch - start_time).argmin()
 end_time_idx = np.abs(epoch - end_time).argmin()
@@ -65,31 +70,30 @@ fig, axs = plt.subplots(5, 1, figsize=(60, 70), sharex=True)
 
 Pi_uu_i_im = axs[0].imshow(Pi_uu_i, origin='lower', cmap=cm, aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-0.1, vmax=0.1,
+           vmin=-6, vmax=6,
            interpolation='gaussian')
 
 Pi_uu_e_im = axs[1].imshow(Pi_uu_e, origin='lower', cmap=cm, aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-3, vmax=3,
+           vmin=-6, vmax=6,
            interpolation='gaussian')
 
 Pi_uu_i_e_im = axs[2].imshow(Pi_uu_i_e, origin='lower', cmap=cm, aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-3, vmax=3,
+           vmin=-4, vmax=4,
            interpolation='gaussian')
 
 Pi_bb_i_e_im = axs[3].imshow(Pi_bb_i_e, origin='lower', cmap=cm, aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-0.1, vmax=0.1,
+           vmin=-3, vmax=3,
            interpolation='gaussian')
 
 Pi_uu_bb_i_e_im = axs[4].imshow(Pi_uu_bb_i_e, origin='lower', cmap=cm, aspect='auto', 
            extent=[epoch[0], epoch[-1], tscales[0]/1000, tscales[-1]/1000],
-           vmin=-3, vmax=3,
+           vmin=-4, vmax=4,
            interpolation='gaussian')
 
-
-locator = mdates.MicrosecondLocator(interval=500000)
+locator = mdates.SecondLocator(interval=5)
 formatter = mdates.ConciseDateFormatter(locator)
 plt.gca().xaxis.set_major_locator(locator)
 plt.gca().xaxis.set_major_formatter(formatter)
@@ -130,15 +134,17 @@ cax = divider.append_axes('right', size=cax_size, pad=cax_pad)
 fig.colorbar(Pi_uu_bb_i_e_im, cax=cax, orientation='vertical')
 cax.text(cax_x, cax_y, r'$\Pi$', transform=cax.transAxes, va='center', rotation='horizontal', fontsize=fs)
 
+shock_crossing_time = datetime(2015, 10, 7, 11, 35, 8)
+
 for ax in axs:
     ax.set_ylabel(r'$\tau$(s)', fontsize=fs)
     ax.set_ylim(bottom=0.06, top=50) #0.3s - 60s
     ax.set_yscale('log')
-    ax.plot(di_loc.index, di_loc.values/vi, 'black', ls='--', lw=15)
-    ax.plot(rhoi_loc.index, rhoi_loc.values/vi, 'black', lw=15)
+    ax.plot(di_loc.index, di_loc.values/vi, 'black', ls='--', lw=12)
+    ax.plot(rhoi_loc.index, rhoi_loc.values/vi, 'black', lw=12)
 
-    ax.text(start_time + timedelta(milliseconds=20), 0.5, r'$d_\mathrm{i}$', fontsize=fs*1.1)
-    ax.text(start_time + timedelta(milliseconds=20), 7, r'$\rho_\mathrm{i}$', fontsize=fs*1.1)
+    ax.text(start_time + timedelta(milliseconds=20), 1.5, r'$d_\mathrm{i}$', fontsize=fs*1.1)
+    ax.text(start_time + timedelta(milliseconds=20), 0.1, r'$\rho_\mathrm{i}$', fontsize=fs*1.1)
 
 x_annotate = -0.06
 y_annotate = 1
@@ -154,5 +160,4 @@ plt.subplots_adjust(hspace=0.1)
 
 plt.tight_layout()
 
-# plt.savefig(IMAGE PATH GOES HERE, dpi=50)
-fig.close()
+plt.savefig(r'/home/sroy/Documents/Codes/20151007_113000_20151007_114000_flux.png', dpi=300)
